@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_margin="@dimen/material_margin_32"
+        app:cardElevation="@dimen/material_margin_6"
+        app:cardCornerRadius="@dimen/material_margin_16">
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clPrayerCard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+           >
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivPrayerCard"
+                android:layout_width="160dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="@dimen/material_margin_16"
+                android:src="@drawable/ic_prayer_card_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+            <TextView
+                android:id="@+id/tvNextPrayerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/next_prayer_name_text_size"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toStartOf="@id/ivPrayerCard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvNextPrayerTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/changa_light"
+                android:textSize="@dimen/text_size_large"
+                app:layout_constraintEnd_toStartOf="@id/ivPrayerCard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvNextPrayerName" />
+
+            <TextView
+                android:id="@+id/tvLocationAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvNextPrayerTime"
+                android:drawableStart="@drawable/ic_location"
+                android:drawablePadding="@dimen/material_margin_8"
+                android:fontFamily="@font/changa_light"
+                android:text=""
+                android:layout_marginTop="@dimen/material_margin_16"
+                android:textSize="@dimen/text_size_micro"
+                app:layout_constraintEnd_toStartOf="@id/ivPrayerCard"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvNextPrayerTime" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

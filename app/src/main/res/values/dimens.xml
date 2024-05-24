@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="material_margin_32">32dp</dimen>
+    <dimen name="material_margin_72">72dp</dimen>
+    <dimen name="material_margin_16">16dp</dimen>
+    <dimen name="material_margin_4">4dp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_micro">12sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_xlarge">34sp</dimen>
+    <dimen name="text_size_xxlarge">45sp</dimen>
+    <dimen name="text_size_xxxlarge">56sp</dimen>
+    <dimen name="text_size_tasbeh">120sp</dimen>
+    <dimen name="section_icon_size">48dp</dimen>
+    <dimen name="material_margin_8">8dp</dimen>
+    <dimen name="common_divider_height">1dp</dimen>
+    <dimen name="supplication_counter_size">110dp</dimen>
+    <dimen name="supplication_counter_text_size">30sp</dimen>
+    <dimen name="supplication_counter_thickness">5dp</dimen>
+    <dimen name="supplication_text_line_height">30sp</dimen>
+    <dimen name="material_margin_56">56dp</dimen>
+    <dimen name="material_margin_40">40dp</dimen>
+    <dimen name="material_margin_24">24dp</dimen>
+    <dimen name="material_margin_6">6dp</dimen>
+    <dimen name="settings_row_height">60dp</dimen>
+    <dimen name="material_margin_48">48dp</dimen>
+    <dimen name="settings_color_item_size">28dp</dimen>
+    <dimen name="setting_theme_icon_size">32dp</dimen>
+    <dimen name="material_margin_2">2dp</dimen>
+    <dimen name="material_margin_96">96dp</dimen>
+    <dimen name="next_prayer_name_text_size">26sp</dimen>
+    <dimen name="next_prayer_time_text_size">18sp</dimen>
+    <dimen name="next_prayer_side_width">100dp</dimen>
+    <dimen name="next_prayer_progress_bar_height">5dp</dimen>
+    <dimen name="material_margin_64">64dp</dimen>
+</resources>

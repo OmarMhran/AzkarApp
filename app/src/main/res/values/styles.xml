@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppThemeWithColorScheme1">
+        <item name="colorPrimary">@color/color_primary_1</item>
+        <item name="colorPrimaryVariant">@color/color_primary_dark_1</item>
+        <item name="colorAccent">@color/color_accent_1</item>
+        <item name="background">@color/background_1</item>
+    </style>
+    <style name="AppThemeWithColorScheme2">
+        <item name="colorPrimary">@color/color_primary_2</item>
+        <item name="colorPrimaryVariant">@color/color_primary_dark_2</item>
+        <item name="colorAccent">@color/color_accent_2</item>
+        <item name="background">@color/background_2</item>
+    </style>
+
+    <style name="AppThemeWithColorScheme3">
+        <item name="colorPrimary">@color/color_primary_3</item>
+        <item name="colorPrimaryVariant">@color/color_primary_dark_3</item>
+        <item name="colorAccent">@color/color_accent_3</item>
+        <item name="background">@color/background_3</item>
+    </style>
+
+    <style name="AppThemeWithColorScheme4">
+        <item name="colorPrimary">@color/color_primary_4</item>
+        <item name="colorPrimaryVariant">@color/color_primary_dark_4</item>
+        <item name="colorAccent">@color/color_accent_4</item>
+        <item name="background">@color/background_4</item>
+    </style>
+
+    <style name="AppThemeWithColorScheme5">
+        <item name="colorPrimary">@color/color_primary_5</item>
+        <item name="colorPrimaryVariant">@color/color_primary_dark_5</item>
+        <item name="colorAccent">@color/color_accent_5</item>
+        <item name="background">@color/background_4</item>
+    </style>
+
+
+    <style name="Transparent" tools:targetApi="kitkat">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+</resources>

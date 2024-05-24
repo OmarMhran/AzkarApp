@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <item
+        android:id="@+id/calenderFragment"
+        android:title="التقويم"
+        android:icon="@drawable/ic_mosque"/>
+
+    <item
+        android:id="@+id/azkarFragment"
+        android:title="الأذكار"
+        android:icon="@drawable/ic_quran_book"/>
+    <item
+        android:id="@+id/tasbihFragment"
+        android:title="المسبحة"
+        android:icon="@drawable/ic_mesbaha"/>
+
+    <item
+        android:id="@+id/settingsFragment"
+        android:title="الإعدادات"
+        android:icon="@drawable/ic_settings"/>
+</menu>

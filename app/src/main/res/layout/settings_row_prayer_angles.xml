@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/SettingsRow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_row_height">
+
+
+        <TextView
+            style="@style/SettingsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_prayer_angles" />
+
+        <LinearLayout
+            style="@style/SettingsAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/settings_label_width"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_prayer_angles_fajr" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/setting_prayer_angles_fajr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_margin_4"
+                android:layout_marginEnd="@dimen/material_margin_24"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:minWidth="@dimen/material_margin_48"
+                android:selectAllOnFocus="true"
+                android:tag="binding_1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_prayer_angles_isha" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/setting_prayer_angles_isha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_margin_4"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:minWidth="@dimen/material_margin_48"
+                android:selectAllOnFocus="true"
+                android:tag="binding_2" />
+        </LinearLayout>
+    </FrameLayout>
+</layout>

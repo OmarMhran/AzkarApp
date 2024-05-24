@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/SettingsRow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_row_height">
+
+        <TextView
+            style="@style/SettingsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_text_theme" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvThemeList"
+            style="@style/SettingsAction"
+            tools:listitem="@layout/day_night_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+</layout>

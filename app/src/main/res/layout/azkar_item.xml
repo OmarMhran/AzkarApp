@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/material_margin_8"
+        android:layout_marginEnd="@dimen/material_margin_8"
+        android:background="@color/background">
+
+        <RelativeLayout
+            android:id="@+id/supplication_main_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/supplication_footer"
+                android:layout_alignParentTop="true">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvZekrDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="«لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، سبحان الله، والحمد لله، ولا إله إلا الله، والله أكبر، ولا حول ولا قوة إلا بالله العلي العظيم، رب اغفر لي»"
+                            android:layout_marginStart="@dimen/material_margin_16"
+                            android:layout_marginTop="@dimen/material_margin_16"
+                            android:layout_marginEnd="@dimen/material_margin_16"
+                            android:layout_marginBottom="@dimen/material_margin_16"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <include layout="@layout/divider" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvZekrRefDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="من قال ذلك غُفِرَ له، فإن دعا استجيب له، فإن قام فتوضأ ثم صلى قُبلت صلاته، البخاري مع الفتح، ٣/ ٣٩، برقم ١١٥٤، وغيره، واللفظ لابن ماجه، انظر: صحيح ابن ماجه، ٢/ ٣٣٥."
+                            android:layout_marginStart="@dimen/material_margin_16"
+                            android:layout_marginTop="@dimen/material_margin_16"
+                            android:layout_marginEnd="@dimen/material_margin_16"
+                            android:layout_marginBottom="@dimen/material_margin_16"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:textSize="@dimen/text_size_small" />
+                    </LinearLayout>
+                </ScrollView>
+            </FrameLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/supplication_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <FrameLayout
+                    android:id="@+id/supplication_footer_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/material_margin_72"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    >
+
+                    <include layout="@layout/divider" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvZekrQuanDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical|center_horizontal|center|start"
+                        android:layout_marginStart="@dimen/material_margin_32"
+                        android:layout_marginEnd="@dimen/material_margin_32"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvZekrCountDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical|center_horizontal|center|end"
+                        android:layout_marginStart="@dimen/material_margin_32"
+                        android:layout_marginEnd="@dimen/material_margin_32"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/material_margin_4"
+                    android:background="?attr/colorOnPrimary"
+                    app:layout_constraintBottom_toBottomOf="@+id/supplication_progress"
+                    app:layout_constraintEnd_toEndOf="@+id/supplication_progress"
+                    app:layout_constraintStart_toStartOf="@+id/supplication_progress"
+                    app:layout_constraintTop_toTopOf="@+id/supplication_progress" />
+
+                <com.shunan.circularprogressbar.CircularProgressBar
+                    android:id="@+id/supplication_progress"
+                    android:layout_width="@dimen/supplication_counter_size"
+                    android:layout_height="@dimen/supplication_counter_size"
+                    app:layout_constraintBottom_toTopOf="@+id/supplication_footer_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/supplication_footer_text"
+                    app:progressColor="?attr/colorPrimary"
+                    app:showDot="false"
+                    app:animationDuration="1"
+                    app:progressWidth="@dimen/material_margin_6" />
+
+                <TextView
+                    android:id="@+id/tvProgressCountDetails"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/supplication_counter_text_size"
+                    app:layout_constraintBottom_toBottomOf="@+id/supplication_progress"
+                    app:layout_constraintEnd_toEndOf="@+id/supplication_progress"
+                    app:layout_constraintStart_toStartOf="@+id/supplication_progress"
+                    app:layout_constraintTop_toTopOf="@+id/supplication_progress" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
+
+

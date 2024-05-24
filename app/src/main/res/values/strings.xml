@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Azkar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="zekr">ذكر</string>
+    <string name="tasbeh">المسبحة</string>
+    <string name="notification_body">حان وقت الصلاة</string>
+
+    <!-- Prayer time names -->
+    <string name="fajr">Fajr</string>
+    <string name="dhuhr">Dhuhr</string>
+    <string name="asr">Asr</string>
+    <string name="maghrib">Maghrib</string>
+    <string name="isha">Isha</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="jumaa">الجمعة</string>
+
+    <string name="notification_title"> وذكر </string>
+    <string name="notifiaction_id">وذكر</string>
+
+
+    <string name="google_maps_key">AIzaSyCUdyx4MiUE9CGYAMMYbU8vgtjx0u-oJdA</string>
+    <string name="settings_color">واجهة التطبيق</string>
+    <string name="settings_text_family">نوع الخط</string>
+    <string name="settings_location">إعدادات تحديد الموقع</string>
+    <string name="settings_interface">إعدادات واجهة التطبيق</string>
+    <string name="settings_text_theme">نهاري/ليلي</string>
+    <string name="settings_prayer">إعدادت مواقيت الصلاة</string>
+    <string name="settings_reading">إعدادت القراءة</string>
+    <string name="settings_text">إعدادت الخط</string>
+    <string name="settings_prayer_angles">زوايا الميل</string>
+    <string name="settings_prayer_angles_fajr">الفجر</string>
+    <string name="settings_prayer_angles_isha">العشاء</string>
+    <string name="settings_font_size">حجم الخط</string>
+    <string name="settings_azan">الأذان</string>
+    <string name="settings_azan_cal_method">الحساب تلقائي</string>
+    <string name="remaining_time">الوقت المتبقي</string>
+    <string name="country">المدينة</string>
+    <string name="city_title">اختيار المدينة</string>
+    <string name="city_country_hint">الدولة</string>
+    <string name="city_search">بحث</string>
+    <string name="search_result">تم حفظ الدولة</string>
+    <string name="settings_text_font_placeholder">أبجد</string>
+    <string name="fragment_calender">مواقيت الصلاة</string>
+    <string name="notification_athan">حان وقت صلاة</string>
+    <string name="share">مشاركة</string>
+    <string name="copy">نسخ</string>
+    <string name="accept">موافق</string>
+
+    <string name="permission">يستخدم هذا التطبيق الموقع الخاص بك لتحديد مواقيت الصلاة الصحيحة لك هل توافق على اعطاء التصريحات المطلوبة ؟ </string>
+    <string name="please_accept_permission">من فضلك وافق على سماحية العثور على الموقع الخاص بك لكي تتمكن من استخدام التطبيق</string>
+    <string name="remember">"حان وقت صلاة "</string>
+    <!-- TODO: Remove or change this placeholder text -->
+</resources>

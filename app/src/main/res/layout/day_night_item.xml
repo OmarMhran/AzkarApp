@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="@dimen/setting_theme_icon_size"
+        android:layout_height="@dimen/setting_theme_icon_size"
+        android:layout_marginStart="@dimen/material_margin_16"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/material_margin_2">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivDayNightItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tint="@color/on_surface_icon_color" />
+    </FrameLayout>
+</layout>

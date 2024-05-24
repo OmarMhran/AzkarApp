@@ -1,0 +1,83 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Azkar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">?attr/colorPrimary</item>
+        <item name="colorPrimaryVariant">?attr/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="backgroundColor">?attr/background</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="searchViewStyle">@style/SearchView</item>
+        <item name="colorAccent">@android:color/holo_orange_light</item>
+        <!-- Status bar color. -->
+
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- Customize your theme here. -->
+
+        <item name="android:fontFamily" tools:targetApi="o">@font/changa_regular</item>
+
+
+    </style>
+
+    <style name="SearchView">
+        <item name="queryBackground">@null</item>
+        <item name="searchHintIcon">@null</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="SplashScreen" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+
+    <style name="SettingsAction">
+        <item name="android:layout_gravity">left|right|center_vertical|fill_horizontal|clip_horizontal</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="SettingsLabel">
+        <item name="android:layout_gravity">right|center_vertical|clip_horizontal</item>
+        <item name="android:width">@dimen/settings_label_width</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="SettingsHeader">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">@dimen/material_margin_16</item>
+    </style>
+
+    <style name="SettingsRow">
+        <item name="android:gravity">clip_horizontal</item>
+        <item name="android:paddingStart">@dimen/material_margin_16</item>
+        <item name="android:paddingEnd">@dimen/material_margin_16</item>
+    </style>
+
+    <style name="SettingsSection">
+        <item name="android:layout_marginStart">@dimen/settings_section_spacing</item>
+        <item name="android:layout_marginEnd">@dimen/settings_section_spacing</item>
+    </style>
+    <style name="ToolbarThinStyle">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="titleTextAppearance">@style/ToolbarThinTitleStyle</item>
+        <item name="titleTextColor">?attr/colorSurface</item>
+    </style>
+
+    <style name="ToolbarThinTitleStyle">
+        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ToolbarTitleStyle">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <dimen name="settings_label_width">128dp</dimen>
+    <dimen name="settings_section_spacing">8dp</dimen>
+    <dimen name="toolbar_title_text_size">17sp</dimen>
+</resources>

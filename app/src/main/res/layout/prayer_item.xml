@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="150dp"
+        android:layout_height="120dp"
+        app:cardElevation="@dimen/material_margin_4"
+        android:layout_marginTop="@dimen/material_margin_4"
+        android:layout_marginStart="@dimen/material_margin_4"
+        android:layout_gravity="center_horizontal"
+        app:cardCornerRadius="@dimen/material_margin_24">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/cvPrayer"
+            android:padding="16dp"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/tvPrayerNameItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/white"
+                android:text="ishaa"
+                android:textStyle="bold"
+                android:lines="1"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/tvPrayerTimeItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tvPrayerNameItem"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/white"
+                android:text="4:08"
+                android:layout_below="@+id/tvPrayerNameItem"
+                android:fontFamily="@font/changa_light"
+                android:textSize="@dimen/text_size_medium" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivPrayerIconItem"
+                android:layout_width="38dp"
+                android:layout_height="42dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="@dimen/material_margin_8"
+                android:adjustViewBounds="true"
+                app:tint="@color/white"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/prayer_item_bookmark"
+                android:layout_width="@dimen/material_margin_24"
+                android:layout_height="@dimen/material_margin_24"
+                app:layout_constraintTop_toTopOf="@id/tvPrayerNameItem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tvPrayerNameItem"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/athan_selector" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
+
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="card_color">#ffffff</color>
+    <color name="background">#086200EE</color>
+    <color name="card_view_dark_background">#212121</color>
+    <color name="background_dark">#121212</color>
+    <color name="background_light">@color/material_grey_50</color>
+
+    <color name="color_1">#f25f5c</color>
+    <color name="color_2">#8386e2</color>
+    <color name="color_3">#3b7dd8</color>
+    <color name="color_4">#84c1ff</color>
+    <color name="color_5">#70c1b3</color>
+    <color name="color_6">@android:color/holo_orange_dark</color>
+
+
+    <color name="color_primary_1">#ff6f00</color>
+    <color name="color_primary_2">#ec407a</color>
+    <color name="color_primary_3">#9c27b0</color>
+    <color name="color_primary_4">#2196f3</color>
+    <color name="color_primary_5">#4caf50</color>
+
+    <color name="color_primary_dark_1">#c43e00</color>
+    <color name="color_primary_dark_2">#b4004e</color>
+    <color name="color_primary_dark_3">#6a0080</color>
+    <color name="color_primary_dark_4">#0069c0</color>
+    <color name="color_primary_dark_5">#087f23</color>
+
+    <color name="color_accent_1">@color/color_primary_1</color>
+    <color name="color_accent_2">@color/color_primary_2</color>
+    <color name="color_accent_3">@color/color_primary_3</color>
+    <color name="color_accent_4">@color/color_primary_4</color>
+    <color name="color_accent_5">@color/color_primary_5</color>
+
+    <color name="background_1">#08FF6F00</color>
+    <color name="background_2">#08EC407A</color>
+    <color name="background_3">#0D9C27B0</color>
+    <color name="background_4">#082196F3</color>
+    <color name="background_5">#084CAF50</color>
+
+    <color name="divider_color">#1f000000</color>
+
+    <color name="color1">#ff6f00</color>
+</resources>

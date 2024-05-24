@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:padding="@dimen/material_margin_8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ui.home.calender.fragment.CalenderFragment">
+
+        <TextView
+            android:id="@+id/tvGeogDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="18sp"
+            android:text="السبت ,15 مايو 2021"
+            android:textStyle="bold"
+            android:layout_margin="@dimen/material_margin_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:id="@+id/tvHijriDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvGeogDate"
+            android:text="3 شوال 1442"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            android:layout_marginStart="@dimen/material_margin_16"
+            android:textColor="@android:color/holo_orange_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <include
+            android:id="@+id/prayer_card"
+            layout="@layout/prayer_card"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginStart="@dimen/material_margin_16"
+            android:layout_marginEnd="@dimen/material_margin_16"
+            android:layout_marginTop="@dimen/material_margin_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvHijriDate" />
+
+        <TextView
+            android:id="@+id/tvPrayerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/prayer_card"
+            app:layout_constraintBottom_toTopOf="@id/rvPrayerTimes"
+            android:textSize="@dimen/text_size_large"
+            android:text="@string/fragment_calender"
+            android:layout_marginTop="@dimen/material_margin_16"
+            android:layout_marginBottom="@dimen/material_margin_8"
+            android:layout_marginStart="@dimen/material_margin_16"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPrayerTimes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/prayer_item"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginTop="@dimen/material_margin_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPrayerTitle"
+           />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

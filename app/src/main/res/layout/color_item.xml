@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        android:id="@+id/flColorItem"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="@dimen/settings_color_item_size"
+        android:layout_height="@dimen/settings_color_item_size"
+        android:layout_marginStart="@dimen/material_margin_8"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="@dimen/material_margin_4">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivCheckColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_check"
+            android:visibility="invisible"
+            />
+    </FrameLayout>
+</layout>

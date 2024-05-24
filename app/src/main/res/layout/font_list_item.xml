@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="@dimen/material_margin_8">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="@dimen/material_margin_4"
+            android:paddingEnd="@dimen/material_margin_4"
+            android:text="@string/settings_text_font_placeholder"
+            android:textColor="@color/on_surface_icon_color" />
+    </FrameLayout>
+</layout>
