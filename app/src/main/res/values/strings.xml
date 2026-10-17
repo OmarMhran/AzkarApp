@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Azkar AlMuslim</string>
+    <string name="permission_brief_one">تحديد مواقيت الصلاة بدقة</string>
+    <string name="permission_request_message">يتطلب التطبيق الوصول إلى موقعك الجغرافي لحساب أوقات الأذان والصلوات بدقة تامة بحسب بلدك وتحديثها تلقائياً في الخلفية.</string>
+    <string name="location_request_agree">السماح بالوصول للموقع</string>
+    <string name="home">الرئيسية</string>
+    <string name="azkar">الأذكار</string>
+    <string name="prayer_times">مواقيت الصلاة</string>
+    <string name="favorite">المفضلة</string>
+    <string name="misbaha">المسبحة</string>
+    <string name="azkar_title">قائمة الأذكار</string>
+    <string name="categories_title">مجموعة الأذكار</string>
+    <string name="settings">الاعدادات</string>
+    <string name="compass">البوصلة</string>
+    <string name="NamesScreen">أسماء الله الحسنى</string>
+
+</resources>

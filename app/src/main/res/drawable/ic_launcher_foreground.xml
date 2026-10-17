@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="240dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+
+    <!-- Background: rounded square -->
+    <path
+        android:fillColor="#1E8E5A"
+        android:pathData="M56,0 H184 A56,56 0 0 1 240,56 V184 A56,56 0 0 1 184,240 H56 A56,56 0 0 1 0,184 V56 A56,56 0 0 1 56,0 Z" />
+
+    <!-- Group to scale down all inner contents so it appears smaller and fits nicely -->
+    <group
+        android:pivotX="120"
+        android:pivotY="120"
+        android:scaleX="0.8"
+        android:scaleY="0.8">
+
+        <!-- Subtle Islamic geometric pattern (clipped to the rounded square) -->
+        <group>
+            <clip-path
+                android:pathData="M56,0 H184 A56,56 0 0 1 240,56 V184 A56,56 0 0 1 184,240 H56 A56,56 0 0 1 0,184 V56 A56,56 0 0 1 56,0 Z" />
+            <path
+                android:strokeColor="#24FFFFFF"
+                android:strokeWidth="1"
+                android:strokeLineJoin="round"
+                android:pathData="M8,8 h24 v24 h-24 Z
+                              M20,3.03 L36.97,20 L20,36.97 L3.03,20 Z
+                              M8,48 h24 v24 h-24 Z
+                              M20,43.03 L36.97,60 L20,76.97 L3.03,60 Z
+                              M8,88 h24 v24 h-24 Z
+                              M20,83.03 L36.97,100 L20,116.97 L3.03,100 Z
+                              M8,128 h24 v24 h-24 Z
+                              M20,123.03 L36.97,140 L20,156.97 L3.03,140 Z
+                              M8,168 h24 v24 h-24 Z
+                              M20,163.03 L36.97,180 L20,196.97 L3.03,180 Z
+                              M8,208 h24 v24 h-24 Z
+                              M20,203.03 L36.97,220 L20,236.97 L3.03,220 Z
+                              M48,8 h24 v24 h-24 Z
+                              M60,3.03 L76.97,20 L60,36.97 L43.03,20 Z
+                              M48,48 h24 v24 h-24 Z
+                              M60,43.03 L76.97,60 L60,76.97 L43.03,60 Z
+                              M48,88 h24 v24 h-24 Z
+                              M60,83.03 L76.97,100 L60,116.97 L43.03,100 Z
+                              M48,128 h24 v24 h-24 Z
+                              M60,123.03 L76.97,140 L60,156.97 L43.03,140 Z
+                              M48,168 h24 v24 h-24 Z
+                              M60,163.03 L76.97,180 L60,196.97 L43.03,180 Z
+                              M48,208 h24 v24 h-24 Z
+                              M60,203.03 L76.97,220 L60,236.97 L43.03,220 Z
+                              M88,8 h24 v24 h-24 Z
+                              M100,3.03 L116.97,20 L100,36.97 L83.03,20 Z
+                              M88,48 h24 v24 h-24 Z
+                              M100,43.03 L116.97,60 L100,76.97 L83.03,60 Z
+                              M88,88 h24 v24 h-24 Z
+                              M100,83.03 L116.97,100 L100,116.97 L83.03,100 Z
+                              M88,128 h24 v24 h-24 Z
+                              M100,123.03 L116.97,140 L100,156.97 L83.03,140 Z
+                              M88,168 h24 v24 h-24 Z
+                              M100,163.03 L116.97,180 L100,196.97 L83.03,180 Z
+                              M88,208 h24 v24 h-24 Z
+                              M100,203.03 L116.97,220 L100,236.97 L83.03,220 Z
+                              M128,8 h24 v24 h-24 Z
+                              M140,3.03 L156.97,20 L140,36.97 L123.03,20 Z
+                              M128,48 h24 v24 h-24 Z
+                              M140,43.03 L156.97,60 L140,76.97 L123.03,60 Z
+                              M128,88 h24 v24 h-24 Z
+                              M140,83.03 L156.97,100 L140,116.97 L123.03,100 Z
+                              M128,128 h24 v24 h-24 Z
+                              M140,123.03 L156.97,140 L140,156.97 L123.03,140 Z
+                              M128,168 h24 v24 h-24 Z
+                              M140,163.03 L156.97,180 L140,196.97 L123.03,180 Z
+                              M128,208 h24 v24 h-24 Z
+                              M140,203.03 L156.97,220 L140,236.97 L123.03,220 Z
+                              M168,8 h24 v24 h-24 Z
+                              M180,3.03 L196.97,20 L180,36.97 L163.03,20 Z
+                              M168,48 h24 v24 h-24 Z
+                              M180,43.03 L196.97,60 L180,76.97 L163.03,60 Z
+                              M168,88 h24 v24 h-24 Z
+                              M180,83.03 L196.97,100 L180,116.97 L163.03,100 Z
+                              M168,128 h24 v24 h-24 Z
+                              M180,123.03 L196.97,140 L180,156.97 L163.03,140 Z
+                              M168,168 h24 v24 h-24 Z
+                              M180,163.03 L196.97,180 L180,196.97 L163.03,180 Z
+                              M168,208 h24 v24 h-24 Z
+                              M180,203.03 L196.97,220 L180,236.97 L163.03,220 Z
+                              M208,8 h24 v24 h-24 Z
+                              M220,3.03 L236.97,20 L220,36.97 L203.03,20 Z
+                              M208,48 h24 v24 h-24 Z
+                              M220,43.03 L236.97,60 L220,76.97 L203.03,60 Z
+                              M208,88 h24 v24 h-24 Z
+                              M220,83.03 L236.97,100 L220,116.97 L203.03,100 Z
+                              M208,128 h24 v24 h-24 Z
+                              M220,123.03 L236.97,140 L220,156.97 L203.03,140 Z
+                              M208,168 h24 v24 h-24 Z
+                              M220,163.03 L236.97,180 L220,196.97 L203.03,180 Z
+                              M208,208 h24 v24 h-24 Z
+                              M220,203.03 L236.97,220 L220,236.97 L203.03,220 Z
+                              M0,-6 L6,0 L0,6 L-6,0 Z
+                              M0,34 L6,40 L0,46 L-6,40 Z
+                              M0,74 L6,80 L0,86 L-6,80 Z
+                              M0,114 L6,120 L0,126 L-6,120 Z
+                              M0,154 L6,160 L0,166 L-6,160 Z
+                              M0,194 L6,200 L0,206 L-6,200 Z
+                              M0,234 L6,240 L0,246 L-6,240 Z
+                              M40,-6 L46,0 L40,6 L34,0 Z
+                              M40,34 L46,40 L40,46 L34,40 Z
+                              M40,74 L46,80 L40,86 L34,80 Z
+                              M40,114 L46,120 L40,126 L34,120 Z
+                              M40,154 L46,160 L40,166 L34,160 Z
+                              M40,194 L46,200 L40,206 L34,200 Z
+                              M40,234 L46,240 L40,246 L34,240 Z
+                              M80,-6 L86,0 L80,6 L74,0 Z
+                              M80,34 L86,40 L80,46 L74,40 Z
+                              M80,74 L86,80 L80,86 L74,80 Z
+                              M80,114 L86,120 L80,126 L74,120 Z
+                              M80,154 L86,160 L80,166 L74,160 Z
+                              M80,194 L86,200 L80,206 L74,200 Z
+                              M80,234 L86,240 L80,246 L74,240 Z
+                              M120,-6 L126,0 L120,6 L114,0 Z
+                              M120,34 L126,40 L120,46 L114,40 Z
+                              M120,74 L126,80 L120,86 L114,80 Z
+                              M120,114 L126,120 L120,126 L114,120 Z
+                              M120,154 L126,160 L120,166 L114,160 Z
+                              M120,194 L126,200 L120,206 L114,200 Z
+                              M120,234 L126,240 L120,246 L114,240 Z
+                              M160,-6 L166,0 L160,6 L154,0 Z
+                              M160,34 L166,40 L160,46 L154,40 Z
+                              M160,74 L166,80 L160,86 L154,80 Z
+                              M160,114 L166,120 L160,126 L154,120 Z
+                              M160,154 L166,160 L160,166 L154,160 Z
+                              M160,194 L166,200 L160,206 L154,200 Z
+                              M160,234 L166,240 L160,246 L154,240 Z
+                              M200,-6 L206,0 L200,6 L194,0 Z
+                              M200,34 L206,40 L200,46 L194,40 Z
+                              M200,74 L206,80 L200,86 L194,80 Z
+                              M200,114 L206,120 L200,126 L194,120 Z
+                              M200,154 L206,160 L200,166 L194,160 Z
+                              M200,194 L206,200 L200,206 L194,200 Z
+                              M200,234 L206,240 L200,246 L194,240 Z
+                              M240,-6 L246,0 L240,6 L234,0 Z
+                              M240,34 L246,40 L240,46 L234,40 Z
+                              M240,74 L246,80 L240,86 L234,80 Z
+                              M240,114 L246,120 L240,126 L234,120 Z
+                              M240,154 L246,160 L240,166 L234,160 Z
+                              M240,194 L246,200 L240,206 L234,200 Z
+                              M240,234 L246,240 L240,246 L234,240 Z" />
+        </group>
+
+        <!-- Inner dark disc -->
+        <path
+            android:fillColor="#17734A"
+            android:strokeColor="#59E8C766"
+            android:strokeWidth="2"
+            android:pathData="M62,120 a58,58 0 1,0 116,0 a58,58 0 1,0 -116,0 Z" />
+
+        <!-- String ring -->
+        <path
+            android:strokeColor="#99E8C766"
+            android:strokeWidth="3"
+            android:pathData="M44,120 a76,76 0 1,0 152,0 a76,76 0 1,0 -152,0 Z" />
+
+        <!-- Large beads -->
+        <path
+            android:fillColor="#E8C766"
+            android:pathData="M182,120 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 Z
+                              M144,198.8 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 Z
+                              M68,198.8 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 Z
+                              M30,120 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 Z
+                              M68,67.2 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 Z
+                              M144,67.2 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0 Z" />
+
+        <!-- Large beads: glossy highlight -->
+        <path
+            android:fillColor="#8CFFF6DE"
+            android:pathData="M186.76,115.52 a4.76,4.76 0 1,0 9.52,0 a4.76,4.76 0 1,0 -9.52,0 Z
+                              M148.76,194.32 a4.76,4.76 0 1,0 9.52,0 a4.76,4.76 0 1,0 -9.52,0 Z
+                              M72.76,194.32 a4.76,4.76 0 1,0 9.52,0 a4.76,4.76 0 1,0 -9.52,0 Z
+                              M34.76,115.52 a4.76,4.76 0 1,0 9.52,0 a4.76,4.76 0 1,0 -9.52,0 Z
+                              M72.76,62.72 a4.76,4.76 0 1,0 9.52,0 a4.76,4.76 0 1,0 -9.52,0 Z
+                              M148.76,62.72 a4.76,4.76 0 1,0 9.52,0 a4.76,4.76 0 1,0 -9.52,0 Z" />
+
+        <!-- Small beads -->
+        <path
+            android:fillColor="#F3DC8F"
+            android:pathData="M178.3,165 a7.5,7.5 0 1,0 15,0 a7.5,7.5 0 1,0 -15,0 Z
+                              M112.5,203 a7.5,7.5 0 1,0 15,0 a7.5,7.5 0 1,0 -15,0 Z
+                              M46.7,165 a7.5,7.5 0 1,0 15,0 a7.5,7.5 0 1,0 -15,0 Z
+                              M46.7,89 a7.5,7.5 0 1,0 15,0 a7.5,7.5 0 1,0 -15,0 Z
+                              M178.3,89 a7.5,7.5 0 1,0 15,0 a7.5,7.5 0 1,0 -15,0 Z" />
+
+        <!-- Small beads: glossy highlight -->
+        <path
+            android:fillColor="#8CFFFBEF"
+            android:pathData="M180.85,162.6 a2.55,2.55 0 1,0 5.1,0 a2.55,2.55 0 1,0 -5.1,0 Z
+                              M115.05,200.6 a2.55,2.55 0 1,0 5.1,0 a2.55,2.55 0 1,0 -5.1,0 Z
+                              M49.25,162.6 a2.55,2.55 0 1,0 5.1,0 a2.55,2.55 0 1,0 -5.1,0 Z
+                              M49.25,86.6 a2.55,2.55 0 1,0 5.1,0 a2.55,2.55 0 1,0 -5.1,0 Z
+                              M180.85,86.6 a2.55,2.55 0 1,0 5.1,0 a2.55,2.55 0 1,0 -5.1,0 Z" />
+
+        <!-- Imam bead -->
+        <path
+            android:fillColor="#C9922E"
+            android:pathData="M110.5,50 a9.5,11 0 1,0 19,0 a9.5,11 0 1,0 -19,0 Z" />
+        <path
+            android:fillColor="#8CFFF1C2"
+            android:pathData="M113.8,46 a3.2,3.6 0 1,0 6.4,0 a3.2,3.6 0 1,0 -6.4,0 Z" />
+        <path
+            android:strokeColor="#C9922E"
+            android:strokeWidth="3"
+            android:strokeLineCap="round"
+            android:pathData="M120,38 L120,30" />
+
+        <!-- Crescent -->
+        <group
+            android:pivotX="120"
+            android:pivotY="120"
+            android:scaleX="1.15"
+            android:scaleY="1.15">
+            <path
+                android:fillColor="#FFF1C2"
+                android:strokeColor="#FFF1C2"
+                android:strokeWidth="4"
+                android:strokeLineJoin="round"
+                android:strokeLineCap="round"
+                android:pathData="M120.62,88 A32,32 0 1 0 148.84,133.86 A27,27 0 0 1 120.62,88 Z" />
+        </group>
+
+        <!-- Rounded star -->
+        <group
+            android:translateX="142"
+            android:translateY="109"
+            android:scaleX="0.45"
+            android:scaleY="0.45">
+            <path
+                android:fillColor="#E8C766"
+                android:strokeColor="#E8C766"
+                android:strokeWidth="10"
+                android:strokeLineJoin="round"
+                android:strokeLineCap="round"
+                android:pathData="M0,-26 L7,-10 L22,-18 L14,-3 L30,0 L14,3 L22,18 L7,10 L0,26 L-7,10 L-22,18 L-14,3 L-30,0 L-14,-3 L-22,-18 L-7,-10 Z" />
+        </group>
+    </group>
+</vector>

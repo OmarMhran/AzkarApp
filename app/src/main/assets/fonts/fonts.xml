@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font
+        android:font="@font/changa"
+        android:fontWeight="0"/>
+    <font
+        android:font="@font/ge_dinar_one"
+        android:fontWeight="1"/>
+    <font
+        android:font="@font/noto_sans_rabic_ui"
+        android:fontWeight="2"/>
+    <font
+        android:font="@font/arabic_ui"
+        android:fontWeight="3"/>
+</font-family>

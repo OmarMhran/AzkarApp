@@ -1,0 +1,25 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="256dp"
+    android:height="256dp"
+    android:viewportWidth="256"
+    android:viewportHeight="256">
+
+  <!-- Outer Islamic frame -->
+  <path
+      android:pathData="M127,31L124,32L118,38L113,41L101,45L91,50L85,56L81,63L80,72L79,73L80,83L81,84L80,87L73,95L73,160L80,168L81,171L80,172L79,182L80,183L81,192L85,199L94,207L113,214L119,218L124,223L128,224L131,223L137,217L142,214L154,210L164,205L170,199L174,192L175,183L176,182L175,172L174,171L175,168L182,160L182,95L175,87L174,84L175,83L176,73L175,72L174,63L170,56L161,48L142,41L136,37L131,32Z"
+      android:fillColor="@android:color/transparent"
+      android:strokeColor="#171938"
+      android:strokeWidth="12"
+      android:strokeLineJoin="round"
+      android:strokeLineCap="round" />
+
+  <!-- Crescent -->
+  <path
+      android:pathData="M128,107L120,111L116,116L113,125L113,130L116,138L122,145L129,148L137,148L140,147L142,144L133,139L129,134L127,129L127,121L128,118L135,110L135,108L134,107Z"
+      android:fillColor="@android:color/transparent"
+      android:strokeColor="#68D391"
+      android:strokeWidth="4"
+      android:strokeLineJoin="round"
+      android:strokeLineCap="round" />
+
+</vector>

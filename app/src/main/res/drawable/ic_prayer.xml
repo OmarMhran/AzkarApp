@@ -1,0 +1,48 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <!-- الإطار الخارجي للسجادة -->
+    <path
+        android:pathData="M80,70 h352 a16,16 0 0 1 16,16 v340 a16,16 0 0 1 -16,16 h-352 a16,16 0 0 1 -16,-16 v-340 a16,16 0 0 1 16,-16 z"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="20"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- الخطوط الأفقية العلوية والسفلية -->
+    <path
+        android:pathData="M80,120 h352 M80,390 h352"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="20"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- الشرابات / الأهداب العلوية -->
+    <path
+        android:pathData="M120,70 V30 M174,70 V30 M228,70 V30 M284,70 V30 M338,70 V30 M392,70 V30"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="20"
+        android:strokeLineCap="round" />
+
+    <!-- الشرابات / الأهداب السفلية -->
+    <path
+        android:pathData="M120,442 v40 M174,442 v40 M228,442 v40 M284,442 v40 M338,442 v40 M392,442 v40"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="20"
+        android:strokeLineCap="round" />
+
+    <!-- المحراب الإسلامي في المنتصف -->
+    <path
+        android:pathData="M180,390 V230 c0,-42 34,-76 76,-76 s76,34 76,76 v160"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="20"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:pathData="M256,120 c-15,18 -20,28 -20,34 0,10 9,18 20,18 s20,-8 20,-18 c0,-6 -5,-16 -20,-34 z"
+        android:fillColor="#FF000000" />
+</vector>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="widget_surface">#FFF7F5EE</color>
+    <color name="widget_text_primary">#FF1C1C1A</color>
+    <color name="widget_text_secondary">#FF6B6F66</color>
+    <color name="widget_accent">#FF1B6B39</color>
+    <color name="widget_on_accent">#FFFFFFFF</color>
+    <color name="widget_divider">#1F000000</color>
+    <string name="widget_description">التاريخ الهجري والميلادي ومواقيت الصلاة</string>
+</resources>
