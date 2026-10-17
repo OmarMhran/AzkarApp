@@ -2,8 +2,7 @@
 
 تطبيق أندرويد مفتوح المصدر لإدارة الأذكار اليومية ومتابعة مواقيت الصلاة والقبلة بتصميم عصري وأنيق يدعم الوضعين الداكن والفتح، مع خيارات تخصيص متقدمة للخطوط والـ Widgets.
 
-[📥 تحميل ملف الـ APK مباشر](https://github.com/OmarMhran/AzkarApp/releasesا)
-
+[📥 تحميل تطبيق AzkarApp (ملف APK)](https://github.com/OmarMhran/AzkarApp/releases)
 ---
 
 ## 📱 الشاشات / Screenshots
