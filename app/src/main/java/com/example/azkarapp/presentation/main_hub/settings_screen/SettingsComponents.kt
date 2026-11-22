@@ -1,6 +1,17 @@
 package com.example.azkarapp.presentation.main_hub.settings_screen
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,9 +59,41 @@ internal fun SettingsCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
         ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f)),
         content = content
     )
+}
+
+internal val SettingsCardMinHeight = 64.dp
+
+@Composable
+internal fun SettingsIconBadge(icon: ImageVector, active: Boolean = false) {
+    val colors = MaterialTheme.colorScheme
+    val tint by animateColorAsState(
+        targetValue = if (active) colors.primary else colors.onSurfaceVariant,
+        animationSpec = tween(180),
+        label = "settingsIconTint"
+    )
+    val bg by animateColorAsState(
+        targetValue = if (active) colors.primary.copy(alpha = 0.16f)
+        else colors.surfaceVariant.copy(alpha = 0.6f),
+        animationSpec = tween(180),
+        label = "settingsIconBg"
+    )
+    Box(
+        modifier = Modifier
+            .size(34.dp)
+            .clip(CircleShape)
+            .background(bg),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = tint,
+            modifier = Modifier.size(18.dp)
+        )
+    }
 }
 
 @Composable
@@ -58,17 +101,20 @@ internal fun SettingsSelectionCard(
     title: String,
     value: String,
     contentDescription: String,
+    icon: ImageVector,
     onClick: () -> Unit
 ) {
     SettingsCard {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(min = SettingsCardMinHeight)
                 .clickable(onClick = onClick)
-                .padding(horizontal = 18.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            SettingsIconBadge(icon)
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -104,7 +150,8 @@ internal fun SettingsSwitchCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 14.dp),
+                .heightIn(min = SettingsCardMinHeight)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

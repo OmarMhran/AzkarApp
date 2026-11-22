@@ -1,5 +1,6 @@
 package com.example.azkarapp.presentation.names_screen
 
+import com.example.azkarapp.presentation.common.ErrorRetry
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -20,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,13 +32,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.azkarapp.domain.model.Names
 import com.example.azkarapp.util.ShareUtils
 
+@Composable
+private fun namesAccent(): Color {
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    return if (isDark) Color(0xFF6BC5D2) else Color(0xFF1F7A8C)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NamesScreen(
     viewModel: NamesViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val accent = namesAccent()
 
     Box(
         modifier = Modifier
@@ -52,7 +62,7 @@ fun NamesScreen(
                                 modifier = Modifier
                                     .size(4.dp, 20.dp)
                                     .clip(RoundedCornerShape(2.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
+                                    .background(accent)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -86,27 +96,27 @@ fun NamesScreen(
             ) {
                 OutlinedTextField(
                     value = state.searchQuery,
-                    onValueChange = { viewModel.onSearchQueryChanged(it) },
+                    onValueChange = { viewModel.onAction(NamesAction.SearchChanged(it)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
                     placeholder = { Text("ابحث في أسماء الله الحسنى أو المعنى...", fontSize = 13.sp) },
                     leadingIcon = {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "بحث", tint = MaterialTheme.colorScheme.primary)
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "بحث", tint = accent)
                     },
                     trailingIcon = {
                         if (state.searchQuery.isNotEmpty()) {
-                            IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
+                            IconButton(onClick = { viewModel.onAction(NamesAction.SearchChanged("")) }) {
                                 Icon(imageVector = Icons.Default.Close, contentDescription = "مسح", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     },
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        focusedBorderColor = accent,
+                        unfocusedBorderColor = accent.copy(alpha = 0.35f),
+                        focusedContainerColor = accent.copy(alpha = 0.08f),
+                        unfocusedContainerColor = accent.copy(alpha = 0.08f)
                     ),
                     singleLine = true
                 )
@@ -117,7 +127,13 @@ fun NamesScreen(
                     if (state.isLoading) {
                         CircularProgressIndicator(
                             modifier = Modifier.align(Alignment.Center),
-                            color = MaterialTheme.colorScheme.primary
+                            color = accent
+                        )
+                    } else if (state.error != null) {
+                        ErrorRetry(
+                            message = state.error ?: "حدث خطأ ما",
+                            onRetry = { viewModel.onAction(NamesAction.Retry) },
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     } else if (state.names.isEmpty()) {
                         Text(
@@ -137,7 +153,7 @@ fun NamesScreen(
                                 key = { _, name -> name.id },
                                 contentType = { _, _ -> "name" }
                             ) { index, name ->
-                                NameItemCard(index = index + 1, title = name.name, meaning = name.meaning, onClick = { viewModel.selectName(name) })
+                                NameItemCard(index = index + 1, title = name.name, meaning = name.meaning, onClick = { viewModel.onAction(NamesAction.SelectName(name)) })
                             }
                         }
                     }
@@ -148,7 +164,7 @@ fun NamesScreen(
         state.selectedName?.let { selected ->
             NameDetailsDialog(
                 nameItem = selected,
-                onDismiss = { viewModel.selectName(null) }
+                onDismiss = { viewModel.onAction(NamesAction.DismissName) }
             )
         }
     }
@@ -161,6 +177,8 @@ fun NameItemCard(
     meaning: String,
     onClick: () -> Unit
 ) {
+    val accent = namesAccent()
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val formattedIndex = remember(index) {
         if (index < 10) "0$index" else "$index"
     }
@@ -171,11 +189,11 @@ fun NameItemCard(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            containerColor = accent.copy(alpha = if (isDark) 0.16f else 0.10f).compositeOver(MaterialTheme.colorScheme.surface)
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+            color = accent.copy(alpha = 0.35f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -189,14 +207,14 @@ fun NameItemCard(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(accent.copy(alpha = 0.22f)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = formattedIndex,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = accent
                 )
             }
 
@@ -210,7 +228,7 @@ fun NameItemCard(
                     text = title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = accent
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -234,6 +252,8 @@ fun NameDetailsDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val accent = namesAccent()
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val shareText = "${nameItem.name}\n\nالمعنى: ${nameItem.meaning}"
 
     AlertDialog(
@@ -253,13 +273,13 @@ fun NameDetailsDialog(
                         imageVector = Icons.Default.Share,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = accent
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "مشاركة",
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = accent
                     )
                 }
 
@@ -276,7 +296,7 @@ fun NameDetailsDialog(
             .fillMaxWidth(0.9f)
             .wrapContentHeight(),
         shape = RoundedCornerShape(24.dp),
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        containerColor = accent.copy(alpha = if (isDark) 0.16f else 0.10f).compositeOver(MaterialTheme.colorScheme.surfaceContainerHigh),
         title = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -287,7 +307,7 @@ fun NameDetailsDialog(
                     text = nameItem.name,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Black,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = accent,
                     textAlign = TextAlign.Center
                 )
             }
@@ -299,13 +319,13 @@ fun NameDetailsDialog(
                     .padding(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
+                HorizontalDivider(color = accent.copy(alpha = 0.35f))
 
                 Text(
                     text = "المعنى والشرح:",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = accent
                 )
 
                 Text(

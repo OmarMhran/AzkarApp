@@ -3,9 +3,9 @@ package com.example.azkarapp.presentation.azkar_categories
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.azkarapp.domain.model.AzkarCategory
 import com.example.azkarapp.domain.repository.AzkarRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,24 +19,33 @@ class CategoriesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val sectionId: Int = checkNotNull(savedStateHandle["sectionId"])
-    val sectionName: String = checkNotNull(savedStateHandle["sectionName"])
+    private val sectionId: Int = checkNotNull(savedStateHandle["sectionId"])
 
-    private val _state = MutableStateFlow(CategoriesState())
-    val state: StateFlow<CategoriesState> = _state.asStateFlow()
+    private val _uiState = MutableStateFlow(
+        CategoriesUiState(sectionName = checkNotNull(savedStateHandle["sectionName"]))
+    )
+    val uiState: StateFlow<CategoriesUiState> = _uiState.asStateFlow()
 
     init {
         loadCategories()
     }
 
+    fun onAction(action: CategoriesAction) {
+        when (action) {
+            CategoriesAction.Retry -> loadCategories()
+        }
+    }
+
     private fun loadCategories() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 val list = azkarRepository.getCategoriesByGroup(sectionId)
-                _state.update { it.copy(isLoading = false, categories = list) }
+                _uiState.update { it.copy(isLoading = false, categories = list) }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false, error = e.localizedMessage) }
+                _uiState.update { it.copy(isLoading = false, error = e.localizedMessage ?: "حدث خطأ ما") }
             }
         }
     }

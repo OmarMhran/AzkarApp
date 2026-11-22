@@ -1,5 +1,6 @@
 package com.example.azkarapp.presentation.azkar_categories
 
+import com.example.azkarapp.presentation.common.ErrorRetry
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -48,10 +49,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+@Composable
+private fun azkarGold(): Color {
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    return if (isDark) Color(0xFFE5C158) else Color(0xFF8A6A1F)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +69,8 @@ fun CategoriesScreen(
     onCategoryClick: (Int, String) -> Unit,
     onBack: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val gold = azkarGold()
 
     Box(
         modifier = Modifier
@@ -72,16 +82,17 @@ fun CategoriesScreen(
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start) {
                             Box(
                                 modifier = Modifier
                                     .size(4.dp, 20.dp)
                                     .clip(RoundedCornerShape(2.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
+                                    .background(gold)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = viewModel.sectionName,
+                                text = state.sectionName,
                                 fontWeight = FontWeight.Black,
                                 fontSize = 20.sp,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -111,7 +122,7 @@ fun CategoriesScreen(
                 if (state.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.primary
+                        color = gold
                     )
                 }
 
@@ -132,15 +143,11 @@ fun CategoriesScreen(
                     }
                 }
 
-                if (state.error != null && !state.isLoading) {
-                    Text(
-                        text = state.error ?: "حدث خطأ ما",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center,
-                        fontSize = 14.sp
+                state.error?.takeIf { !state.isLoading }?.let { message ->
+                    ErrorRetry(
+                        message = message,
+                        onRetry = { viewModel.onAction(CategoriesAction.Retry) },
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }
@@ -154,6 +161,8 @@ fun CategoryCard(
     categoryName: String,
     onClick: () -> Unit
 ) {
+    val gold = azkarGold()
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -175,11 +184,11 @@ fun CategoryCard(
             .scale(cardScale),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = gold.copy(alpha = if (isDark) 0.16f else 0.10f).compositeOver(MaterialTheme.colorScheme.surface)
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+            color = gold.copy(alpha = 0.35f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         interactionSource = interactionSource
@@ -193,7 +202,7 @@ fun CategoryCard(
                     .width(3.5.dp)
                     .fillMaxHeight(0.45f)
                     .clip(RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp))
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(gold)
             )
 
             Row(
@@ -207,14 +216,14 @@ fun CategoryCard(
                     modifier = Modifier
                         .size(26.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                        .background(gold.copy(alpha = 0.22f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = formattedIndex,
                         fontSize = 11.5.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = gold
                     )
                 }
 

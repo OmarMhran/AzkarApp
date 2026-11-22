@@ -1,15 +1,18 @@
 package com.example.azkarapp.presentation.splash_screen
 
 import androidx.lifecycle.ViewModel
-import com.example.azkarapp.data.repo.PrayerRepository
+import com.example.azkarapp.data.repo.OnboardingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+enum class SplashDestination { MainHub, Permission }
+
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val prayerRepository: PrayerRepository
+    private val onboardingRepository: OnboardingRepository
 ) : ViewModel() {
 
-    suspend fun nextRoute(): String =
-        if (prayerRepository.isOnboardingDone()) "main_hub" else "permission_screen"
+    suspend fun resolveDestination(): SplashDestination =
+        if (onboardingRepository.isOnboardingDone()) SplashDestination.MainHub
+        else SplashDestination.Permission
 }

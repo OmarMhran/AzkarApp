@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.List // استخدمنا النس�
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.azkarapp.R
+import com.example.azkarapp.domain.model.AyahKey
 
 sealed class Screen(
     val route: String,
@@ -30,4 +31,16 @@ sealed class Screen(
     object Supplications : Screen("supplications_screen/{categoryId}/{categoryName}", R.string.azkar_title)
     object Compass : Screen("compass_screen", R.string.compass)
     object NamesScreen : Screen("names_screen",R.string.NamesScreen)
+    object Quran : Screen("quran", R.string.Quran)
+    object QuranReader : Screen("quran_reader/{page}?surah={surah}&ayah={ayah}", R.string.Quran) {
+        /** [highlight]: آية تتظلل أول ما الصفحة تفتح (نتيجة بحث أو مفضلة). */
+        fun createRoute(page: Int, highlight: AyahKey? = null): String =
+            if (highlight == null) "quran_reader/$page"
+            else "quran_reader/$page?surah=${highlight.surahNumber}&ayah=${highlight.ayahNumber}"
+    }
+
+    object Hafz : Screen("hafz?page={page}", R.string.Quran) {
+        fun createRoute(page: Int? = null) = if (page == null) "hafz" else "hafz?page=$page"
+    }
+
 }

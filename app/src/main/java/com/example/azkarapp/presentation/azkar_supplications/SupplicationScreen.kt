@@ -1,6 +1,7 @@
 package com.example.azkarapp.presentation.azkar_supplications
 
 
+import com.example.azkarapp.presentation.common.ErrorRetry
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -10,7 +11,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +55,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -67,8 +70,8 @@ fun SupplicationsScreen(
     viewModel: SupplicationsViewModel,
     onBack: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val fontSize by viewModel.fontSize.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val fontSize = state.fontSize
 
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { state.supplications.size })
@@ -79,8 +82,9 @@ fun SupplicationsScreen(
         }
     }
 
-    val isDark = isSystemInDarkTheme()
-    val activeGreenColor = if (isDark) Color(0xFF68D391) else MaterialTheme.colorScheme.primary
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val activeGreenColor = if (isDark) Color(0xFFE5C158) else Color(0xFF8A6A1F)
+    val tint = if (isDark) 0.16f else 0.10f
 
     Box(
         modifier = Modifier
@@ -92,7 +96,8 @@ fun SupplicationsScreen(
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start) {
                             Box(
                                 modifier = Modifier
                                     .size(4.dp, 20.dp)
@@ -101,7 +106,7 @@ fun SupplicationsScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = viewModel.categoryName,
+                                text = state.categoryName,
                                 fontWeight = FontWeight.Black,
                                 fontSize = 20.sp,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -147,7 +152,7 @@ fun SupplicationsScreen(
                         val isFinished = currentCount == 0
 
                         val screenBgColor by animateColorAsState(
-                            targetValue = if (isFinished) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0f),
+                            targetValue = if (isFinished) activeGreenColor.copy(alpha = tint) else activeGreenColor.copy(alpha = 0f),
                             animationSpec = tween(durationMillis = 300),
                             label = "bgColor"
                         )
@@ -171,25 +176,23 @@ fun SupplicationsScreen(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
                                 ) {
-                                    viewModel.triggerTick()
-
-                                    viewModel.decrementCount(supp.id) {
-                                        viewModel.triggerCompletion()
-
-                                        scope.launch {
-                                            delay(400)
-                                            if (pagerState.currentPage < state.supplications.size - 1) {
-                                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                    viewModel.onAction(
+                                        SupplicationsAction.Tap(supp.id) {
+                                            scope.launch {
+                                                delay(400)
+                                                if (pagerState.currentPage < state.supplications.size - 1) {
+                                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                                }
                                             }
                                         }
-                                    }
+                                    )
                                 }
                                 .padding(horizontal = 24.dp, vertical = 16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Surface(
-                                color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                color = activeGreenColor.copy(alpha = 0.18f),
                                 shape = CircleShape
                             ) {
                                 Text(
@@ -230,11 +233,11 @@ fun SupplicationsScreen(
                                 if (!supp.note.isNullOrBlank()) {
                                     Spacer(modifier = Modifier.height(20.dp))
                                     Surface(
-                                        color = MaterialTheme.colorScheme.surfaceContainer,
+                                        color = activeGreenColor.copy(alpha = tint),
                                         shape = RoundedCornerShape(14.dp),
                                         border = BorderStroke(
                                             1.dp,
-                                            MaterialTheme.colorScheme.outlineVariant
+                                            activeGreenColor.copy(alpha = 0.35f)
                                         )
                                     ) {
                                         Text(
@@ -263,7 +266,7 @@ fun SupplicationsScreen(
                                     CircularProgressIndicator(
                                         progress = { 1f },
                                         modifier = Modifier.fillMaxSize(),
-                                        color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                        color = activeGreenColor.copy(alpha = 0.2f),
                                         strokeWidth = 8.dp,
                                     )
 
@@ -305,23 +308,20 @@ fun SupplicationsScreen(
                     }
                 }
 
-                if (state.error != null && !state.isLoading) {
-                    Text(
-                        text = state.error ?: "حدث خطأ غير متوقع",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center
+                state.error?.takeIf { !state.isLoading }?.let { message ->
+                    ErrorRetry(
+                        message = message,
+                        onRetry = { viewModel.onAction(SupplicationsAction.Retry) },
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
                 if (state.showCompletionDialog) {
                     AlertDialog(
-                        onDismissRequest = { viewModel.dismissCompletionDialog() },
+                        onDismissRequest = { viewModel.onAction(SupplicationsAction.DismissCompletionDialog) },
                         modifier = Modifier.width(360.dp),
                         shape = RoundedCornerShape(24.dp),
-                        containerColor = MaterialTheme.colorScheme.surface,
+                        containerColor = activeGreenColor.copy(alpha = tint).compositeOver(MaterialTheme.colorScheme.surfaceContainerHigh),
                         title = {
                             Box(
                                 modifier = Modifier.fillMaxWidth(),
@@ -329,6 +329,7 @@ fun SupplicationsScreen(
                             ) {
                                 Text(
                                     text = "أحسنت",
+                                    color = activeGreenColor,
                                     fontWeight = FontWeight.Black,
                                     textAlign = TextAlign.Center
                                 )
@@ -340,7 +341,7 @@ fun SupplicationsScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "أتممت ${viewModel.categoryName} بحمد الله 🌿",
+                                    text = "أتممت ${state.categoryName} بحمد الله 🌿",
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -354,18 +355,22 @@ fun SupplicationsScreen(
                                 )
                             ) {
                                 TextButton(
-                                    onClick = { viewModel.dismissCompletionDialog() },
+                                    onClick = { viewModel.onAction(SupplicationsAction.DismissCompletionDialog) },
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Text("البقاء هنا")
+                                    Text("البقاء هنا", color = activeGreenColor)
                                 }
 
                                 Button(
                                     onClick = {
-                                        viewModel.dismissCompletionDialog()
+                                        viewModel.onAction(SupplicationsAction.DismissCompletionDialog)
                                         onBack()
                                     },
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = activeGreenColor,
+                                        contentColor = if (isDark) Color(0xFF2A2000) else Color.White
+                                    )
                                 ) {
                                     Text("رجوع")
                                 }

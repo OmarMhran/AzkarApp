@@ -35,8 +35,15 @@ class QiblaViewModel @Inject constructor(
         observeCompass()
     }
 
+    fun onAction(action: QiblaAction) {
+        when (action) {
+            QiblaAction.Retry -> loadLocationAndCalculateQiblah()
+        }
+    }
+
     private fun loadLocationAndCalculateQiblah() {
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             try {
                 val location = prayerRepository.getBestKnownLocation()
                     ?: prayerRepository.resolveLocation()
@@ -71,7 +78,7 @@ class QiblaViewModel @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(isLoading = false, errorMessage = e.localizedMessage)
+                    it.copy(isLoading = false, errorMessage = e.localizedMessage ?: "حدث خطأ ما")
                 }
             }
         }

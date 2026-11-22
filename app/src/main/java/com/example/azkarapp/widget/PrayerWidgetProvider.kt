@@ -8,8 +8,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.Intent
+import android.os.SystemClock
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
 import com.example.azkarapp.MainActivity
@@ -61,6 +61,10 @@ class PrayerWidgetProvider : AppWidgetProvider() {
         const val ACTION_REFRESH = "com.example.azkarapp.widget.REFRESH"
         private const val TAG = "PrayerWidget"
         private val ORDER = listOf("الفجر", "الظهر", "العصر", "المغرب", "العشاء")
+        private val COUNTDOWNS = listOf(
+            R.id.countdown_fajr, R.id.countdown_dhuhr, R.id.countdown_asr,
+            R.id.countdown_maghrib, R.id.countdown_isha,
+        )
         private val CELLS = listOf(
             Triple(R.id.name_fajr, R.id.time_fajr, R.id.cell_fajr),
             Triple(R.id.name_dhuhr, R.id.time_dhuhr, R.id.cell_dhuhr),
@@ -69,6 +73,7 @@ class PrayerWidgetProvider : AppWidgetProvider() {
             Triple(R.id.name_isha, R.id.time_isha, R.id.cell_isha),
         )
 
+        /** تتنادى من أي مكان (مثلاً بعد تغيير الموقع أو الطريقة) لتحديث الـ widget. */
         fun requestUpdate(context: Context) {
             val app = context.applicationContext
             val ids = AppWidgetManager.getInstance(app)
@@ -82,6 +87,7 @@ class PrayerWidgetProvider : AppWidgetProvider() {
             val ids = manager.getAppWidgetIds(ComponentName(app, PrayerWidgetProvider::class.java))
             if (ids.isEmpty()) { cancelAlarm(app); return }
 
+            // أول رسم فوري بالتواريخ (مفيش I/O) عشان الـ widget ما يفضلش فاضي
             ids.forEach { manager.updateAppWidget(it, build(app, null)) }
 
             val repo = EntryPointAccessors
@@ -140,10 +146,24 @@ class PrayerWidgetProvider : AppWidgetProvider() {
                 val active = i == nextIndex
                 v.setInt(cellId, "setBackgroundResource",
                     if (active) R.drawable.widget_cell_active else 0)
-                v.setDualTextColor(context, nameId,
-                    if (active) R.color.widget_on_accent else R.color.widget_text_secondary)
-                v.setDualTextColor(context, timeId,
-                    if (active) R.color.widget_on_accent else R.color.widget_text_primary)
+                v.setTextColor(nameId, context.getColor(
+                    if (active) R.color.widget_on_accent else R.color.widget_text_secondary))
+                v.setTextColor(timeId, context.getColor(
+                    if (active) R.color.widget_on_accent else R.color.widget_text_primary))
+            }
+
+            // الشكل المربّع: العدّاد بيظهر في نص صف الصلاة القادمة بين الاسم والوقت.
+            if (style == WidgetStyle.SQUARE) {
+                val remaining = if (nextIndex >= 0) millisUntilNext(times, nextIndex) else null
+                COUNTDOWNS.forEachIndexed { i, id ->
+                    if (i == nextIndex && remaining != null) {
+                        v.setViewVisibility(id, View.VISIBLE)
+                        v.setChronometerCountDown(id, true)
+                        v.setChronometer(id, SystemClock.elapsedRealtime() + remaining, "%s", true)
+                    } else {
+                        v.setViewVisibility(id, View.INVISIBLE)
+                    }
+                }
             }
 
             if (style == WidgetStyle.REGULAR) {
@@ -153,15 +173,10 @@ class PrayerWidgetProvider : AppWidgetProvider() {
                 )
             }
 
+            // خلفية بشفافية يختارها المستخدم: الـ drawable أبيض، واللون + الـ alpha بييجوا من الـ tint
             val alpha = (WidgetStyle.getOpacity(context) * 255 / 100).coerceIn(0, 255)
-            val (surfaceLight, surfaceDark) = colorPair(context, R.color.widget_surface)
-            v.setColorStateList(
-                R.id.widget_root, "setBackgroundTintList",
-                ColorStateList.valueOf(withAlpha(surfaceLight, alpha)),
-                ColorStateList.valueOf(withAlpha(surfaceDark, alpha))
-            )
-
-            applyFontSizes(context, v, style)
+            val surface = (context.getColor(R.color.widget_surface) and 0x00FFFFFF) or (alpha shl 24)
+            v.setColorStateList(R.id.widget_root, "setBackgroundTintList", ColorStateList.valueOf(surface))
 
             val open = PendingIntent.getActivity(
                 context, 0, Intent(context, MainActivity::class.java),
@@ -171,44 +186,10 @@ class PrayerWidgetProvider : AppWidgetProvider() {
             return v
         }
 
-        private fun baseSizes(style: WidgetStyle): FloatArray = when (style) {
-            WidgetStyle.COMPACT -> floatArrayOf(13f, 10f, 10f, 11f, 0f)
-            WidgetStyle.SQUARE -> floatArrayOf(12f, 10f, 12f, 12f, 0f)
-            WidgetStyle.REGULAR -> floatArrayOf(18f, 12f, 12f, 14f, 12f)
-        }
-
-        private fun applyFontSizes(context: Context, v: RemoteViews, style: WidgetStyle) {
-            val scale = WidgetStyle.getFontScale(context) / 100f
-            val b = baseSizes(style)
-            fun size(id: Int, base: Float) =
-                v.setTextViewTextSize(id, TypedValue.COMPLEX_UNIT_SP, base * scale)
-            size(R.id.hijri_date, b[0])
-            size(R.id.gregorian_date, b[1])
-            CELLS.forEach { (nameId, timeId, _) -> size(nameId, b[2]); size(timeId, b[3]) }
-            if (style == WidgetStyle.REGULAR) size(R.id.next_label, b[4])
-        }
-
-        private fun withAlpha(color: Int, alpha: Int) = (color and 0x00FFFFFF) or (alpha shl 24)
-
-        private fun colorPair(context: Context, colorRes: Int): Pair<Int, Int> {
-            fun forMode(nightFlag: Int): Int {
-                val cfg = android.content.res.Configuration(context.resources.configuration)
-                cfg.uiMode = (cfg.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK.inv()) or nightFlag
-                return context.createConfigurationContext(cfg).getColor(colorRes)
-            }
-            return forMode(android.content.res.Configuration.UI_MODE_NIGHT_NO) to
-                forMode(android.content.res.Configuration.UI_MODE_NIGHT_YES)
-        }
-
-        private fun RemoteViews.setDualTextColor(context: Context, viewId: Int, colorRes: Int) {
-            val (light, dark) = colorPair(context, colorRes)
-            setColorInt(viewId, "setTextColor", light, dark)
-        }
-
         private fun parse(time: String): Calendar? = try {
             val clean = time.trim().replace("ص", "AM").replace("م", "PM")
             val d = (try { SimpleDateFormat("hh:mm a", Locale.US).parse(clean) }
-                catch (e: Exception) { SimpleDateFormat("HH:mm", Locale.US).parse(clean) }) ?: return null
+            catch (e: Exception) { SimpleDateFormat("HH:mm", Locale.US).parse(clean) }) ?: return null
             val t = Calendar.getInstance().apply { this.time = d }
             Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, t.get(Calendar.HOUR_OF_DAY))
@@ -217,10 +198,19 @@ class PrayerWidgetProvider : AppWidgetProvider() {
             }
         } catch (e: Exception) { null }
 
+        /** الوقت المتبقي (ms) لحد الصلاة القادمة؛ لو وقتها عدّى النهاردة (بعد العشاء) بنحسب فجر بكرة. */
+        private fun millisUntilNext(times: Map<String, String>?, nextIndex: Int): Long? {
+            val key = ORDER.getOrNull(nextIndex) ?: return null
+            val raw = times?.get(key) ?: if (key == "الظهر") times?.get("الجمعة") else null
+            val at = parse(raw ?: return null) ?: return null
+            if (at.timeInMillis <= System.currentTimeMillis()) at.add(Calendar.DAY_OF_YEAR, 1)
+            return (at.timeInMillis - System.currentTimeMillis()).takeIf { it > 0 }
+        }
+
         private fun nextPrayerTrigger(times: Map<String, String>): Long {
             val now = System.currentTimeMillis()
             return times.values.mapNotNull { parse(it)?.timeInMillis }
-                .filter { it > now }.minOrNull()?.plus(60_000L) ?: Long.MAX_VALUE
+                .filter { it > now }.minOrNull()?.plus(2_000L) ?: Long.MAX_VALUE
         }
 
         private fun midnightPlusMinute(): Long = Calendar.getInstance().apply {
@@ -237,6 +227,7 @@ class PrayerWidgetProvider : AppWidgetProvider() {
 
         private fun scheduleAlarm(context: Context, at: Long) {
             val am = context.getSystemService(AlarmManager::class.java) ?: return
+            // inexact كفاية للـ widget (مش محتاج دقة الثانية) ومش محتاج صلاحية exact alarm
             am.setAndAllowWhileIdle(AlarmManager.RTC, at, alarmIntent(context))
         }
 

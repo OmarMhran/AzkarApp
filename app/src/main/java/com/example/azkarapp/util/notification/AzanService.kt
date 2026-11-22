@@ -10,40 +10,33 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.example.azkarapp.R
 
 class AzanService : Service() {
 
     companion object {
         const val ACTION_STOP_AZAN = "ACTION_STOP_AZAN"
+
+        /** بيتبعت (جوه التطبيق بس) لما الأذان يخلص أو يتوقف، علشان شاشة الأذان تتقفل أو تتحدّث. */
+        const val ACTION_AZAN_ENDED = "ACTION_AZAN_ENDED"
         private const val FOREGROUND_ID = 1002
         private const val TAG = "AzanService"
     }
 
     private var mediaPlayer: MediaPlayer? = null
-    private var focusRequest: AudioFocusRequest? = null
     private var isReceiverRegistered = false
+    private var currentPrayerName: String = "الصلاة"
+    private var focusRequest: AudioFocusRequest? = null
 
-    private val audioManager: AudioManager by lazy { getSystemService(AudioManager::class.java) }
-
-    private val adhanAttributes: AudioAttributes = AudioAttributes.Builder()
-        .setUsage(AudioAttributes.USAGE_MEDIA)
-        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-        .build()
-
+    // بيستقبل أمر الإيقاف من زرار الإشعار أو الـ swipe (deleteIntent) بشكل مباشر
     private val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            stopAzanAndRelease()
-        }
-    }
-
-
-    private val focusListener = AudioManager.OnAudioFocusChangeListener { change ->
-        when (change) {
-            AudioManager.AUDIOFOCUS_LOSS,
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> stopAzanAndRelease()
+            // إيقاف يدوي (زرار أو swipe): المستخدم سمع الأذان أو مش عايزه، فنشيل الإشعار.
+            stopAzanAndRelease(keepNotification = false)
         }
     }
 
@@ -59,22 +52,33 @@ class AzanService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // دعم الإيقاف عن طريق startService كمان (للتوافق)
         if (intent?.action == ACTION_STOP_AZAN) {
-            stopAzanAndRelease()
+            stopAzanAndRelease(keepNotification = false)
             return START_NOT_STICKY
         }
 
         val prayerName = intent?.getStringExtra("PRAYER_NAME") ?: "الصلاة"
+        currentPrayerName = prayerName
         val soundId = intent?.getStringExtra("ADHAN_SOUND_ID") ?: "default_adhan"
 
-
+        // 1. بدء الخدمة في المقدمة
+        // ⚠️ لازم تكون معلنة في الـ Manifest: FOREGROUND_SERVICE_MEDIA_PLAYBACK permission +
+        // android:foregroundServiceType="mediaPlayback" على الـ <service>، وإلا startForeground()
+        // بترمي Exception من أندرويد 14 وتكرش البرنامج كله. بنلفها بـ try/catch عشان لو حصل
+        // خطأ (جهاز/Manifest ناقص) نوقف الخدمة بهدوء بدل ما نكرش، ونضمن إن أي مسار بيرجع بعد
+        // فشل هنا بيوقف الخدمة برضو (مفيش صوت هيتشغل من غير foreground notification شغالة).
         val startedForeground = try {
             val notification = NotificationHelper.buildPrayerForegroundNotification(this, prayerName)
-            startForeground(
-                FOREGROUND_ID,
-                notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(
+                    FOREGROUND_ID,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                )
+            } else {
+                startForeground(FOREGROUND_ID, notification)
+            }
             true
         } catch (e: Exception) {
             Log.e(TAG, "startForeground failed — تحقق من صلاحيات وإعلانات الـ Manifest", e)
@@ -86,81 +90,82 @@ class AzanService : Service() {
             return START_NOT_STICKY
         }
 
-        val skipReason = soundSkipReason()
-        if (skipReason != null) {
-            notifyWithoutSound(prayerName, skipReason)
-            return START_NOT_STICKY
-        }
-
-        if (!requestAdhanFocus()) {
-            notifyWithoutSound(prayerName, "audio focus مرفوض (غالباً مكالمة)")
-            return START_NOT_STICKY
-        }
+        // 2. تشغيل ملف الصوت المختار
+        val resId = AdhanSounds.resId(soundId)
 
         try {
+            // لو في أذان شغال قبل كده نفضّيه الأول
             releasePlayerAsync(mediaPlayer)
             mediaPlayer = null
 
+            val attrs = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+
+            // نطلب audio focus مؤقت: الفيديو أو الموسيقى (يوتيوب، سبوتيفاي...) بيقفوا لحد ما الأذان يخلص
+            // وبعدين بيكمّلوا لوحدهم. ده طلب مش أمر: تطبيق بيتجاهل الـ focus ممكن يفضل شغال.
+            // الأذان بيشتغل في كل الأحوال حتى لو الطلب ما اتقبلش.
+            requestFocus(attrs)
+
             val player = MediaPlayer.create(
                 this,
-                AdhanSounds.resId(soundId),
-                adhanAttributes,
+                resId,
+                attrs,
                 AudioManager.AUDIO_SESSION_ID_GENERATE
             )
 
             if (player == null) {
-                stopAzanAndRelease()
+                stopAzanAndRelease(keepNotification = true)
             } else {
-                player.setOnCompletionListener { stopAzanAndRelease() }
+                // الأذان خلص لوحده: الإشعار يفضل موجود علشان لو المستخدم ما سمعوش يفتكره.
+                player.setOnCompletionListener { stopAzanAndRelease(keepNotification = true) }
                 mediaPlayer = player
                 player.start()
             }
         } catch (e: Exception) {
             Log.e(TAG, "MediaPlayer failed", e)
-            stopAzanAndRelease()
+            stopAzanAndRelease(keepNotification = true)
         }
 
         return START_NOT_STICKY
     }
 
-    private fun soundSkipReason(): String? = when {
-        audioManager.ringerMode != AudioManager.RINGER_MODE_NORMAL -> "الجهاز على الصامت أو الاهتزاز"
-        audioManager.mode != AudioManager.MODE_NORMAL -> "مكالمة أو رنين جاري"
-        else -> null
-    }
-
-    private fun requestAdhanFocus(): Boolean {
-        val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
-            .setAudioAttributes(adhanAttributes)
-            .setOnAudioFocusChangeListener(focusListener)
-            .setAcceptsDelayedFocusGain(false)
-            .setWillPauseWhenDucked(false)
-            .build()
-
-        val granted = audioManager.requestAudioFocus(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
-        if (granted) focusRequest = request
-        return granted
+    private fun requestFocus(attrs: AudioAttributes) {
+        try {
+            val audioManager = getSystemService(AudioManager::class.java) ?: return
+            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                .setAudioAttributes(attrs)
+                .setOnAudioFocusChangeListener { }
+                .build()
+            focusRequest = request
+            audioManager.requestAudioFocus(request)
+        } catch (e: Exception) {
+            Log.e(TAG, "audio focus request failed", e)
+        }
     }
 
     private fun abandonFocus() {
-        focusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
-        focusRequest = null
-    }
-
-    private fun notifyWithoutSound(prayerName: String, reason: String) {
-        Log.d(TAG, "adhan sound skipped: $reason")
         try {
-            stopForeground(STOP_FOREGROUND_REMOVE)
+            val request = focusRequest ?: return
+            focusRequest = null
+            getSystemService(AudioManager::class.java)?.abandonAudioFocusRequest(request)
         } catch (_: Exception) {
         }
-        NotificationHelper.showPrayerNotification(this, prayerName)
-        stopSelf()
     }
 
-    private fun stopAzanAndRelease() {
+    private fun stopAzanAndRelease(keepNotification: Boolean = false) {
         val player = mediaPlayer
         mediaPlayer = null
 
+        abandonFocus()
+
+        try {
+            sendBroadcast(Intent(ACTION_AZAN_ENDED).setPackage(packageName))
+        } catch (_: Exception) {
+        }
+
+        // كتم فوري عشان المستخدم ما يحسش بأي تأخير
         try {
             player?.setVolume(0f, 0f)
             player?.pause()
@@ -168,13 +173,23 @@ class AzanService : Service() {
             e.printStackTrace()
         }
 
-        abandonFocus()
-
-        try {
-            stopForeground(STOP_FOREGROUND_REMOVE)
-        } catch (_: Exception) {
+        if (keepNotification) {
+            // نفصل الإشعار عن الخدمة (فيفضل بعد ما الخدمة تقف) ونستبدله بإشعار عادي
+            // يتمسح بالـ swipe أو بالضغط عليه.
+            try {
+                stopForeground(STOP_FOREGROUND_DETACH)
+                NotificationHelper.showAzanFinishedNotification(this, FOREGROUND_ID, currentPrayerName)
+            } catch (e: Exception) {
+                Log.e(TAG, "keeping notification failed", e)
+            }
+        } else {
+            try {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            } catch (_: Exception) {
+            }
         }
 
+        // التنضيف الثقيل بعيد عن الـ main thread
         releasePlayerAsync(player)
 
         stopSelf()
@@ -196,7 +211,7 @@ class AzanService : Service() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        stopAzanAndRelease()
+        stopAzanAndRelease(keepNotification = false)
     }
 
     override fun onDestroy() {
@@ -208,6 +223,7 @@ class AzanService : Service() {
             isReceiverRegistered = false
         }
         abandonFocus()
+        // لو لسه في player (مثلاً النظام قتل الخدمة) نفضّيه
         val player = mediaPlayer
         mediaPlayer = null
         try {

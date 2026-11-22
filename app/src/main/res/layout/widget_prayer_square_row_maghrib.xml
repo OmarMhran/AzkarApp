@@ -12,17 +12,35 @@
     <TextView
         android:id="@+id/name_maghrib"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|start"
+        android:includeFontPadding="false"
         android:layout_weight="1"
         android:maxLines="1"
         android:text="المغرب"
         android:textColor="@color/widget_text_secondary"
         android:textSize="12sp" />
 
+    <Chronometer
+        android:id="@+id/countdown_maghrib"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:layout_weight="1"
+        android:maxLines="1"
+        android:textColor="@color/widget_on_accent"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
     <TextView
         android:id="@+id/time_maghrib"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
+        android:includeFontPadding="false"
         android:maxLines="1"
         android:text="--:--"
         android:textColor="@color/widget_text_primary"

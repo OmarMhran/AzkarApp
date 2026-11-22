@@ -39,17 +39,15 @@ fun PermissionScreen(
     val context = LocalContext.current
     val scrollState = rememberScrollState()
 
-    val countries by viewModel.countries.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     var selectedCountry by remember {
         mutableStateOf(Country("EG", "مصر", "🇪🇬", 5, 30.0444, 31.2357, "القاهرة", "Africa/Cairo"))
     }
     var isCountryMenuExpanded by remember { mutableStateOf(false) }
 
-    LaunchedEffect(countries) {
-        if (countries.isNotEmpty()) {
-            selectedCountry = viewModel.suggestCountry(countries)
-        }
+    LaunchedEffect(state.suggestedCountry) {
+        state.suggestedCountry?.let { selectedCountry = it }
     }
 
     val permissionsToRequest = mutableListOf(
@@ -62,13 +60,15 @@ fun PermissionScreen(
     }
 
     fun navigateToHome() {
-        viewModel.saveSelectedCountry(selectedCountry) {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.Permission.route) {
-                    inclusive = true
+        viewModel.onAction(
+            PermissionAction.SaveCountry(selectedCountry) {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Permission.route) {
+                        inclusive = true
+                    }
                 }
             }
-        }
+        )
     }
 
 
@@ -176,7 +176,7 @@ fun PermissionScreen(
                         .fillMaxWidth(0.85f)
                         .background(MaterialTheme.colorScheme.surfaceContainer)
                 ) {
-                    countries.forEach { country ->
+                    state.countries.forEach { country ->
                         DropdownMenuItem(
                             text = {
                                 Row(verticalAlignment = Alignment.CenterVertically) {

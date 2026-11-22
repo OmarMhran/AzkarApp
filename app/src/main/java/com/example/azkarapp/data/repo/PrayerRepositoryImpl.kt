@@ -61,6 +61,7 @@ class PrayerRepositoryImpl @Inject constructor(
                 granted(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
+    /** قبل أندرويد 13 مفيش إذن صريح للإشعارات، فبيتعتبر ممنوح دايماً. */
     override fun hasNotificationPermission(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return true
         return ContextCompat.checkSelfPermission(
@@ -252,12 +253,7 @@ class PrayerRepositoryImpl @Inject constructor(
         return prayerPreferences.hasSavedLocation()
     }
 
-    override suspend fun isOnboardingDone(): Boolean = prayerPreferences.isOnboardingDone()
-
     override suspend fun getLocationFromSelectedCountry(): LocationResult {
         return countryLocation() ?: LocationResult(30.0444, 31.2357, "القاهرة", LocationSource.COUNTRY)
     }
-
-    override suspend fun saveCountrySelection(countryCode: String, methodId: Int) =
-        prayerPreferences.saveCountrySelection(countryCode, methodId)
 }

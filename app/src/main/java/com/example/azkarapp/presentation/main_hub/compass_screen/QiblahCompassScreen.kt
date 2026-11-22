@@ -1,6 +1,7 @@
 package com.example.azkarapp.presentation.main_hub.compass_screen
 
 
+import com.example.azkarapp.presentation.common.ErrorRetry
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -42,15 +43,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 
 
-data class QiblaUiState(
-    val isLoading: Boolean = true,
-    val azimuth: Float = 0f,
-    val qiblahBearing: Float = 0f,
-    val isAlignedWithQiblah: Boolean = false,
-    val cityName: String = "",
-    val hasCompassSensor: Boolean = true,
-    val errorMessage: String? = null
-)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QiblahCompassScreen(
@@ -113,6 +105,14 @@ fun QiblahCompassScreen(
             uiState.isLoading -> {
                 Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = goldColor)
+                }
+            }
+            uiState.errorMessage != null -> {
+                Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
+                    ErrorRetry(
+                        message = uiState.errorMessage ?: "حدث خطأ ما",
+                        onRetry = { viewModel.onAction(QiblaAction.Retry) }
+                    )
                 }
             }
             !uiState.hasCompassSensor -> {

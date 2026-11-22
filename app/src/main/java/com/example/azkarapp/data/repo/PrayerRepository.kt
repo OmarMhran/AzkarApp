@@ -22,23 +22,26 @@ interface PrayerRepository {
         val timeZoneId: String? = null
     )
 
+    // ---------- البلد والإعدادات ----------
     val selectedCountryCode: Flow<String>
     suspend fun getSelectedCountryCode(): String
-    suspend fun saveCountrySelection(countryCode: String, methodId: Int)
-    suspend fun isOnboardingDone(): Boolean
 
+    // ---------- حالة الجهاز ----------
     fun hasLocationPermission(): Boolean
 
+    /** قبل أندرويد 13 مفيش إذن صريح للإشعارات، فبيتعتبر ممنوح دايماً. */
     fun hasNotificationPermission(): Boolean
     fun isOnline(): Boolean
     fun networkAvailableFlow(): Flow<Unit>
 
+    // ---------- الموقع ----------
     suspend fun getBestKnownLocation(): LocationResult?
     suspend fun resolveLocation(): LocationResult?
     suspend fun fetchLocationAndCity(): LocationResult
     suspend fun getLocationFromSelectedCountry(): LocationResult
     suspend fun hasSavedLocation(): Boolean
 
+    // ---------- المواقيت ----------
     suspend fun getPrayerTimes(
         location: LocationResult,
         dayOffset: Int = 0
@@ -53,6 +56,7 @@ interface PrayerRepository {
 
     fun calculateNextPrayer(prayerTimesMap: LinkedHashMap<String, String>): NextPrayerInfo
 
+    // ---------- تنبيهات الصلوات ----------
     suspend fun savePrayerNotificationState(prayerName: String, isEnabled: Boolean)
     fun getPrayerNotificationSettings(): Flow<Map<String, Boolean>>
 }

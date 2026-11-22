@@ -1,13 +1,19 @@
 package com.example.azkarapp.di
 
+import com.example.azkarapp.data.repo.AzkarProgressRepository
+import com.example.azkarapp.data.repo.AzkarProgressRepositoryImpl
 import com.example.azkarapp.data.repo.AzkarRepositoryImpl
 import com.example.azkarapp.data.repo.CountryRepositoryImpl
 import com.example.azkarapp.data.repo.HomeRepository
 import com.example.azkarapp.data.repo.HomeRepositoryImpl
 import com.example.azkarapp.data.repo.MisbahaRepository
 import com.example.azkarapp.data.repo.MisbahaRepositoryImpl
+import com.example.azkarapp.data.repo.OnboardingRepository
+import com.example.azkarapp.data.repo.OnboardingRepositoryImpl
 import com.example.azkarapp.data.repo.PrayerRepository
 import com.example.azkarapp.data.repo.PrayerRepositoryImpl
+import com.example.azkarapp.data.repo.QiblahRepository
+import com.example.azkarapp.data.repo.QiblahRepositoryImpl
 import com.example.azkarapp.data.repo.SettingsRepository
 import com.example.azkarapp.data.repo.SettingsRepositoryImpl
 import com.example.azkarapp.domain.repository.AzkarRepository
@@ -45,4 +51,16 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindPrayerRepository(impl: PrayerRepositoryImpl): PrayerRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindQiblahRepository(impl: QiblahRepositoryImpl): QiblahRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAzkarProgressRepository(impl: AzkarProgressRepositoryImpl): AzkarProgressRepository
 }

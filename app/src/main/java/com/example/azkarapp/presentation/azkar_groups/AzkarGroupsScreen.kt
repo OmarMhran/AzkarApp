@@ -2,6 +2,7 @@
 
 package com.example.azkarapp.presentation.azkar_groups
 
+import com.example.azkarapp.presentation.common.ErrorRetry
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -24,9 +25,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+@Composable
+private fun azkarGold(): Color {
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    return if (isDark) Color(0xFFE5C158) else Color(0xFF8A6A1F)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +44,8 @@ fun AzkarGroupsScreen(
     onGroupClick: (groupId: Int, groupName: String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val gold = azkarGold()
 
     Box(
         modifier = Modifier
@@ -52,7 +62,7 @@ fun AzkarGroupsScreen(
                                 modifier = Modifier
                                     .size(4.dp, 20.dp)
                                     .clip(RoundedCornerShape(2.dp))
-                                    .background(MaterialTheme.colorScheme.primary)
+                                    .background(gold)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -86,7 +96,7 @@ fun AzkarGroupsScreen(
                 if (state.isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.primary
+                        color = gold
                     )
                 }
 
@@ -104,6 +114,14 @@ fun AzkarGroupsScreen(
                         )
                     }
                 }
+
+                state.error?.takeIf { !state.isLoading }?.let { message ->
+                    ErrorRetry(
+                        message = message,
+                        onRetry = { viewModel.onAction(AzkarGroupsAction.Retry) },
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
         }
     }
@@ -115,6 +133,8 @@ fun MinimalGroupCard(
     groupName: String,
     onClick: () -> Unit
 ) {
+    val gold = azkarGold()
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -136,11 +156,11 @@ fun MinimalGroupCard(
             .scale(cardScale),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = gold.copy(alpha = if (isDark) 0.16f else 0.10f).compositeOver(MaterialTheme.colorScheme.surface)
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+            color = gold.copy(alpha = 0.35f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         interactionSource = interactionSource
@@ -154,7 +174,7 @@ fun MinimalGroupCard(
                     .width(3.5.dp)
                     .fillMaxHeight(0.45f)
                     .clip(RoundedCornerShape(topEnd = 4.dp, bottomEnd = 4.dp))
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(gold)
             )
 
             Row(
@@ -168,14 +188,14 @@ fun MinimalGroupCard(
                     modifier = Modifier
                         .size(26.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                        .background(gold.copy(alpha = 0.22f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = formattedIndex,
                         fontSize = 11.5.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = gold
                     )
                 }
 

@@ -11,7 +11,7 @@ val OnEmeraldContainer = Color(0xFF1B5E20)
 
 
 val IslamicGreenDark = Color(0xFF68D391)
-val IslamicGreenDarkContainer = Color(0xFF143823) // خلفية داكنة صريحة لمنع الوميض
+val IslamicGreenDarkContainer = Color(0xFF1F4D33) // خلفية داكنة صريحة لمنع الوميض
 val IslamicGoldDark = Color(0xFFE5C158)
-val BackgroundDark = Color(0xFF121314)
-val SurfaceDark = Color(0xFF1A1C1E)
+val BackgroundDark = Color(0xFF0F1A14)
+val SurfaceDark = Color(0xFF17241C)

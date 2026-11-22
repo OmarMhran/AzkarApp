@@ -2,11 +2,11 @@ package com.example.azkarapp.presentation.main_hub.home_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.azkarapp.data.local.AzkarProgress
-import com.example.azkarapp.data.local.AzkarProgressDataSource
+import com.example.azkarapp.data.repo.AzkarProgressRepository
 import com.example.azkarapp.data.repo.HomeRepository
 import com.example.azkarapp.data.repo.MisbahaRepository
 import com.example.azkarapp.data.repo.PrayerRepository
+import com.example.azkarapp.domain.usecase.quran.ObserveLastReadUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -19,48 +19,55 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Calendar
+import java.time.LocalDate
 import javax.inject.Inject
-
-data class HomeUiState(
-    val isLoading: Boolean = false,
-    val dailyHadith: String = "",
-    val dailyZikr: String = "",
-    val dailyAyah: String = "",
-    val totalTasbihCount: Int = 0,
-    val nextPrayerName: String = "جاري التحميل...",
-    val timeRemainingForNextPrayer: String = "--",
-    val azkarProgress: AzkarProgress? = null
-)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
     private val misbahaRepository: MisbahaRepository,
     private val prayerRepository: PrayerRepository,
-    private val azkarProgressDataSource: AzkarProgressDataSource
+    private val azkarProgressRepository: AzkarProgressRepository,
+    private val observeQuranLastRead: ObserveLastReadUseCase
 ) : ViewModel() {
+
+    private companion object {
+        const val COUNTDOWN_REFRESH_MS = 60_000L
+    }
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     @Volatile private var prayerTimesMap: LinkedHashMap<String, String> = linkedMapOf()
     @Volatile private var lastLocation: PrayerRepository.LocationResult? = null
-    private var computedDay = -1
+    @Volatile private var computedDay: LocalDate? = null
 
     private var countdownJob: Job? = null
     private var loadJob: Job? = null
 
     init {
-        loadHomeData()
+        loadDailyContent()
         observeTotalTasbih()
-        loadPrayerTimesAndStartCountdown()
         observeAzkarProgress()
+        observeQuranProgress()
+        loadPrayerTimes()
     }
 
-    private fun loadHomeData() {
-        _uiState.update { currentState ->
-            currentState.copy(
+    fun onAction(action: HomeAction) {
+        when (action) {
+            HomeAction.Refresh -> {
+                _uiState.update { it.copy(isLoading = true) }
+                loadDailyContent()
+                loadPrayerTimes()
+            }
+        }
+    }
+
+    // ---------- المحتوى اليومي والعدادات ----------
+
+    private fun loadDailyContent() {
+        _uiState.update {
+            it.copy(
                 dailyHadith = homeRepository.getRandomHadith(),
                 dailyZikr = homeRepository.getRandomZikr(),
                 dailyAyah = homeRepository.getRandomAyah()
@@ -76,7 +83,31 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadPrayerTimesAndStartCountdown() {
+    private fun observeAzkarProgress() {
+        viewModelScope.launch {
+            azkarProgressRepository.progress.collect { progress ->
+                _uiState.update { it.copy(azkarProgress = progress) }
+            }
+        }
+    }
+
+    private fun observeQuranProgress() {
+        viewModelScope.launch {
+            try {
+                observeQuranLastRead().collect { last ->
+                    _uiState.update { it.copy(quranLastRead = last) }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // قاعدة المصحف لسه ما اتجهزتش: الكارت يفضل من غير "أكمل القراءة".
+            }
+        }
+    }
+
+    // ---------- الصلاة القادمة ----------
+
+    private fun loadPrayerTimes() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             try {
@@ -106,7 +137,7 @@ class HomeViewModel @Inject constructor(
 
         lastLocation = location
         prayerTimesMap = LinkedHashMap(fetched)
-        computedDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+        computedDay = LocalDate.now()
 
         updatePrayerCountdown()
         _uiState.update { it.copy(isLoading = false) }
@@ -125,14 +156,13 @@ class HomeViewModel @Inject constructor(
 
     private fun updatePrayerCountdown() {
         val map = prayerTimesMap
-        if (map.isNotEmpty()) {
-            val nextPrayerInfo = prayerRepository.calculateNextPrayer(map)
-            _uiState.update {
-                it.copy(
-                    nextPrayerName = nextPrayerInfo.name,
-                    timeRemainingForNextPrayer = nextPrayerInfo.remainingTime
-                )
-            }
+        if (map.isEmpty()) return
+        val info = prayerRepository.calculateNextPrayer(map)
+        _uiState.update {
+            it.copy(
+                nextPrayerName = info.name,
+                timeRemainingForNextPrayer = info.remainingTime
+            )
         }
     }
 
@@ -140,11 +170,10 @@ class HomeViewModel @Inject constructor(
         countdownJob?.cancel()
         countdownJob = viewModelScope.launch {
             while (isActive) {
-                delay(60_000L)
+                delay(COUNTDOWN_REFRESH_MS)
 
-                val today = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
                 val loc = lastLocation
-                if (today != computedDay && loc != null) {
+                if (LocalDate.now() != computedDay && loc != null) {
                     applyLocation(loc)
                     return@launch
                 }
@@ -153,23 +182,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun refreshContent() {
-        _uiState.update { it.copy(isLoading = true) }
-        loadHomeData()
-        loadPrayerTimesAndStartCountdown()
-    }
-
     override fun onCleared() {
-        super.onCleared()
         countdownJob?.cancel()
         loadJob?.cancel()
-    }
-
-    private fun observeAzkarProgress() {
-        viewModelScope.launch {
-            azkarProgressDataSource.progressFlow.collect { progress ->
-                _uiState.update { it.copy(azkarProgress = progress) }
-            }
-        }
+        super.onCleared()
     }
 }

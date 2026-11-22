@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Widgets
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -51,6 +53,7 @@ fun WidgetSettingsCards(
         title = "إعدادات الـ Widget",
         value = "${config.style.label} · خط $fontLabel · شفافية ${config.opacity}%",
         contentDescription = "إعدادات الـ Widget",
+        icon = Icons.Rounded.Widgets,
         onClick = { sheetVisible = true }
     )
 

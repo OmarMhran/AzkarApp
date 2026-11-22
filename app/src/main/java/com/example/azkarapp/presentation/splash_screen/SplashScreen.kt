@@ -29,13 +29,13 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    onNavigateNext: (destinationRoute: String) -> Unit,
+    onNavigateNext: (SplashDestination) -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
 
     LaunchedEffect(Unit) {
         delay(1000)
-        onNavigateNext(viewModel.nextRoute())
+        onNavigateNext(viewModel.resolveDestination())
     }
 
     Box(

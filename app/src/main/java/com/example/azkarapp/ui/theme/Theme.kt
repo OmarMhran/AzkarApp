@@ -29,12 +29,12 @@ private val DarkColorScheme = darkColorScheme(
 
     surface = SurfaceDark,
     onSurface = Color(0xFFE2E2E6),
-    surfaceVariant = Color(0xFF242824),
+    surfaceVariant = Color(0xFF22332A),
     onSurfaceVariant = Color(0xFFC2C9C2),
 
-    surfaceContainer = Color(0xFF1B1E1B),
-    surfaceContainerHigh = Color(0xFF252925),
-    surfaceContainerHighest = Color(0xFF303430)
+    surfaceContainer = Color(0xFF1C2B22),
+    surfaceContainerHigh = Color(0xFF263A2E),
+    surfaceContainerHighest = Color(0xFF30463A)
 )
 
 private val LightColorScheme = lightColorScheme(
